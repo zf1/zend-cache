@@ -76,8 +76,8 @@ class Zend_Cache_Backend_Static
      * Cache object is being set since it's not supported by the
      * standard backend interface
      *
-     * @param  string $name
-     * @param  mixed $value
+     * @param  string                    $name
+     * @param  mixed                     $value
      * @return Zend_Cache_Backend_Static
      */
     public function setOption($name, $value)
@@ -105,6 +105,7 @@ class Zend_Cache_Backend_Static
 
             parent::setOption($name, $value);
         }
+
         return $this;
     }
 
@@ -131,13 +132,13 @@ class Zend_Cache_Backend_Static
      *
      * Note : return value is always "string" (unserialization is done by the core not by the backend)
      *
-     * @param  string  $id                     Cache id
-     * @param  boolean $doNotTestCacheValidity If set to true, the cache validity won't be tested
+     * @param  string       $id                     Cache id
+     * @param  boolean      $doNotTestCacheValidity If set to true, the cache validity won't be tested
      * @return string|false cached datas
      */
     public function load($id, $doNotTestCacheValidity = false)
     {
-        if (($id = (string)$id) === '') {
+        if (($id = (string) $id) === '') {
             $id = $this->_detectId();
         } else {
             $id = $this->_decodeId($id);
@@ -157,6 +158,7 @@ class Zend_Cache_Backend_Static
         $file     = rtrim($pathName, '/') . '/' . $fileName . $this->_options['file_extension'];
         if (file_exists($file)) {
             $content = file_get_contents($file);
+
             return $content;
         }
 
@@ -197,6 +199,7 @@ class Zend_Cache_Backend_Static
         if (file_exists($file)) {
             return true;
         }
+
         return false;
     }
 
@@ -206,10 +209,10 @@ class Zend_Cache_Backend_Static
      * Note : $data is always "string" (serialization is done by the
      * core not by the backend)
      *
-     * @param  string $data            Datas to cache
-     * @param  string $id              Cache id
-     * @param  array $tags             Array of strings, the cache record will be tagged by each string entry
-     * @param  int   $specificLifetime If != false, set a specific lifetime for this cache record (null => infinite lifetime)
+     * @param  string  $data             Datas to cache
+     * @param  string  $id               Cache id
+     * @param  array   $tags             Array of strings, the cache record will be tagged by each string entry
+     * @param  int     $specificLifetime If != false, set a specific lifetime for this cache record (null => infinite lifetime)
      * @return boolean true if no problem
      */
     public function save($data, $id, $tags = array(), $specificLifetime = false)
@@ -225,7 +228,7 @@ class Zend_Cache_Backend_Static
         }
 
         clearstatcache();
-        if (($id = (string)$id) === '') {
+        if (($id = (string) $id) === '') {
             $id = $this->_detectId();
         } else {
             $id = $this->_decodeId($id);
@@ -267,6 +270,7 @@ class Zend_Cache_Backend_Static
         $this->_tagged[$id]['tags'] = array_unique(array_merge($this->_tagged[$id]['tags'], $tags));
         $this->_tagged[$id]['extension'] = $ext;
         $this->getInnerCache()->save($this->_tagged, self::INNER_CACHE_NAME);
+
         return (bool) $result;
     }
 
@@ -303,7 +307,7 @@ class Zend_Cache_Backend_Static
     /**
      * Remove a cache record
      *
-     * @param  string $id Cache id
+     * @param  string  $id Cache id
      * @return boolean True if no problem
      */
     public function remove($id)
@@ -330,6 +334,7 @@ class Zend_Cache_Backend_Static
         if (!file_exists($file)) {
             return false;
         }
+
         return unlink($file);
     }
 
@@ -338,7 +343,7 @@ class Zend_Cache_Backend_Static
      * REQUEST_URI based relative path (deletes the actual file matching this
      * in addition to the matching directory)
      *
-     * @param  string $id Cache id
+     * @param  string  $id Cache id
      * @return boolean True if no problem
      */
     public function removeRecursively($id)
@@ -372,8 +377,10 @@ class Zend_Cache_Backend_Static
             if (!is_writable($file)) {
                 return false;
             }
+
             return unlink($file);
         }
+
         return true;
     }
 
@@ -390,8 +397,8 @@ class Zend_Cache_Backend_Static
      * Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG => remove cache entries matching any given tags
      *                                               ($tags can be an array of strings or a single string)
      *
-     * @param  string $mode Clean mode
-     * @param  array  $tags Array of tags
+     * @param  string  $mode Clean mode
+     * @param  array   $tags Array of tags
      * @return boolean true if no problem
      */
     public function clean($mode = Zend_Cache::CLEANING_MODE_ALL, $tags = array())
@@ -465,6 +472,7 @@ class Zend_Cache_Backend_Static
                 Zend_Cache::throwException('Invalid mode for clean() method');
                 break;
         }
+
         return $result;
     }
 
@@ -493,6 +501,7 @@ class Zend_Cache_Backend_Static
         if ($this->_tagCache === null) {
             Zend_Cache::throwException('An Inner Cache has not been set; use setInnerCache()');
         }
+
         return $this->_tagCache;
     }
 
@@ -506,6 +515,7 @@ class Zend_Cache_Backend_Static
     {
         $path = realpath($path);
         $base = realpath($this->_options['public_dir']);
+
         return strncmp($path, $base, strlen($base)) !== 0;
     }
 
@@ -524,7 +534,7 @@ class Zend_Cache_Backend_Static
      *
      * Throw an exception if a problem is found
      *
-     * @param  string $string Cache id or tag
+     * @param  string               $string Cache id or tag
      * @throws Zend_Cache_Exception
      * @return void
      * @deprecated Not usable until perhaps ZF 2.0
@@ -554,7 +564,7 @@ class Zend_Cache_Backend_Static
      * Detect an octal string and return its octal value for file permission ops
      * otherwise return the non-string (assumed octal or decimal int already)
      *
-     * @param string $val The potential octal in need of conversion
+     * @param  string $val The potential octal in need of conversion
      * @return int
      */
     protected function _octdec($val)
@@ -562,13 +572,14 @@ class Zend_Cache_Backend_Static
         if (is_string($val) && decoct(octdec($val)) == $val) {
             return octdec($val);
         }
+
         return $val;
     }
 
     /**
      * Decode a request URI from the provided ID
      *
-     * @param string $id
+     * @param  string $id
      * @return string
      */
     protected function _decodeId($id)
