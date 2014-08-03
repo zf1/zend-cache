@@ -25,7 +25,6 @@
  */
 // require_once 'Zend/Cache/Core.php';
 
-
 /**
  * @package    Zend_Cache
  * @subpackage Zend_Cache_Frontend
@@ -101,7 +100,7 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
     /**
      * Constructor
      *
-     * @param  array $options Associative array of options
+     * @param  array                $options Associative array of options
      * @throws Zend_Cache_Exception
      */
     public function __construct(array $options = array())
@@ -142,8 +141,8 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
      *
      * Just a wrapper to get a specific behaviour for cached_entity
      *
-     * @param  string $name  Name of the option
-     * @param  mixed  $value Value of the option
+     * @param  string               $name  Name of the option
+     * @param  mixed                $value Value of the option
      * @throws Zend_Cache_Exception
      * @return void
      */
@@ -197,9 +196,9 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
     /**
      * Main method : call the specified method or get the result from cache
      *
-     * @param  string $name       Method name
-     * @param  array  $parameters Method parameters
-     * @return mixed Result
+     * @param  string    $name       Method name
+     * @param  array     $parameters Method parameters
+     * @return mixed     Result
      * @throws Exception
      */
     public function __call($name, $parameters)
@@ -248,6 +247,7 @@ class Zend_Cache_Frontend_Class extends Zend_Cache_Core
         }
 
         echo $output;
+
         return $return;
     }
 
